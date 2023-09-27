@@ -1,0 +1,177 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: review-system_postgres
+    hostname: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env.local
+    volumes:
+      - ./databases/postgres:/var/lib/postgresql/data
+      - ./db.default.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: review-system_rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    env_file:
+      - .env.local
+    volumes:
+      - ./databases/rabbitmq:/var/lib/rabbitmq
+      - ./databases/rabbitmq:/var/log/rabbitmq
+
+  pgadmin:
+    user: root
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: schiriy_maxim@icloud.com
+      PGADMIN_DEFAULT_PASSWORD: staging-secret-password
+    depends_on:
+      - postgres
+    volumes:
+      - ./databases/pgadmin-data:/var/lib/pgadmin
+
+#  redis:
+#    image: redis:6.2-alpine
+#    command: redis-server --save 20 1 --loglevel warning --requirepass admin
+#    container_name: review-system_redis
+#    restart: always
+#    ports:
+#      - '6379:6379'
+#    env_file:
+#      - .env.local
+#    volumes:
+#      - ./databases/redis:/data
+#      - ./redis.conf:/etc/redis/redis.conf
+
+#  ipfs:
+#    container_name: ipfs
+#    image: ipfs/kubo:release
+#    ports:
+#      #      - "4001:4001" # ipfs swarm - expose if needed/wanted
+#      - '5001:5001' # ipfs api - expose if needed/wanted
+#      - '8081:8080' # ipfs gateway - expose if needed/wanted
+#    volumes:
+#      - ./databases/ipfs:/data/ipfs
+
+#  clickhouse-01:
+#    image: 'clickhouse/clickhouse-server:23.4.1.1943-alpine'
+#    hostname: clickhouse-01
+#    container_name: clickhouse-01
+#    ports:
+#      - 19000:9000
+#      - 18123:8123
+#    volumes:
+#      - ./deploy/clickhouse/config.xml:/etc/clickhouse-server/config.xml
+#      - ./deploy/clickhouse/metrika.xml:/etc/clickhouse-server/metrika.xml
+#      - ./deploy/clickhouse/macros/macros-01.xml:/etc/clickhouse-server/config.d/macros.xml
+#      - ./deploy/clickhouse/users.xml:/etc/clickhouse-server/users.xml
+#      - ./databases/clickhouse/server-01:/var/lib/clickhouse
+#    ulimits:
+#      nofile:
+#        soft: 262144
+#        hard: 262144
+
+#  prometheus:
+#    image: prom/prometheus:v2.35.0
+#    container_name: prometheus
+#    hostname: prometheus
+#    volumes:
+#      - ./databases/prometheus:/etc/prometheus
+#    command:
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#      - '--storage.tsdb.path=/prometheus'
+#      - '--web.enable-lifecycle'
+#      - '--web.enable-admin-api'
+#      - '--web.enable-remote-write-receiver'
+#      - '--web.page-title=DaprInventoryTimeseries'
+#      - '--log.level=debug'
+#    ports:
+#      - '9090:9090'
+#    networks:
+#      - http
+#
+#  pushgateway:
+#    image: prom/pushgateway:v1.4.3
+#    container_name: pushgateway
+#    hostname: pushgateway
+#    restart: unless-stopped
+#    depends_on:
+#      - prometheus
+#    ports:
+#      - 9091:9091
+#    networks:
+#      - http
+#
+#  grafana:
+#    image: grafana/grafana:9.0.5
+#    restart: unless-stopped
+#    container_name: grafana
+#    hostname: grafana
+#    volumes:
+#      - ./databases/grafana:/var/lib/grafana
+#    ports:
+#      - 3000:3000
+#    links:
+#      - elasticsearch
+#    networks:
+#      - http
+#      - elk
+#
+#  elasticsearch:
+#    image: elasticsearch:8.7.1
+#    container_name: elasticsearch
+#    hostname: elasticsearch
+#    restart: always
+#    environment:
+#      - xpack.security.enabled=false
+#      - bootstrap.memory_lock=true
+#      - cluster.name=docker-cluster
+#      - cluster.routing.allocation.disk.threshold_enabled=false
+#      - discovery.type=single-node
+#      # - ES_JAVA_OPTS=-XX:UseAVX=2 -Xms1g -Xmx1g
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#      - ./databases/elasticsearch:/usr/share/elasticsearch/data
+#    mem_limit: "1g"
+#    ports:
+#      - 9200:9200
+#    networks:
+#      - http
+#      - elk
+#    healthcheck:
+#      interval: 20s
+#      retries: 10
+#      test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
+
+volumes:
+  postgres:
+  rabbitmq:
+  redis:
+  ipfs:
+  elasticsearch:
+  prometheus:
+
+networks:
+  db:
+    driver: bridge
+  redis:
+    driver: bridge
+  amqp:
+    driver: bridge
+  http:
+    driver: bridge

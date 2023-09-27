@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "monorepo": true,
+  "projects": {
+    "gateway": {
+      "type": "application",
+      "root": "/apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "service": {
+      "type": "application",
+      "root": "/apps/service",
+      "entryFile": "main",
+      "sourceRoot": "apps/service/src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "worker": {
+      "type": "application",
+      "root": "/apps/admin",
+      "entryFile": "main",
+      "sourceRoot": "apps/worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "admin": {
+      "type": "application",
+      "root": "/apps/admin",
+      "entryFile": "main",
+      "sourceRoot": "apps/admin/src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "@lib/modules": {
+      "type": "library",
+      "root": "/libs/shared-modules",
+      "entryFile": "index",
+      "sourceRoot": "/libs/shared-modules",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "@lib/utils": {
+      "type": "library",
+      "root": "/libs/shared-utils",
+      "entryFile": "index",
+      "sourceRoot": "/libs/shared-utils",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "@lib/config": {
+      "type": "library",
+      "root": "/libs/config",
+      "entryFile": "index",
+      "sourceRoot": "/libs/config",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "@lib/core": {
+      "type": "library",
+      "root": "/libs/core",
+      "entryFile": "index",
+      "sourceRoot": "/libs/core",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    },
+    "@lib/testing": {
+      "type": "library",
+      "root": "/libs/testing",
+      "entryFile": "index",
+      "sourceRoot": "/libs/testing",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.json"
+      }
+    }
+  }
+}

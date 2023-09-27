@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  gateway:
+    image: registry.gitlab.com/muzikanto/review-system/server:latest
+    container_name: gateway
+    hostname: gateway
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: [ 'npm', 'run', 'start:prod:gateway']
+    ports:
+      - '4000:4000'
+    networks:
+      - http
+      - db
+      - amqp
+
+  service:
+    image: registry.gitlab.com/muzikanto/review-system/service:latest
+    container_name: game_server
+    hostname: game_server
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: [ 'npm', 'run', 'start:prod:service']
+    ports:
+      - '4001:4001'
+    networks:
+      - http
+      - db
+      - amqp
+
+  worker:
+    image: registry.gitlab.com/muzikanto/review-system/server:latest
+    container_name: worker
+    hostname: worker
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: [ 'npm', 'run', 'start:prod:worker']
+    ports:
+      - '4002:4002'
+    networks:
+      - http
+      - db
+      - amqp
+
+  admin:
+    image: registry.gitlab.com/muzikanto/review-system/admin:latest
+    container_name: indexer
+    hostname: indexer
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: [ 'npm', 'run', 'start:prod:admin']
+    ports:
+      - '4003:4003'
+    networks:
+      - http
+      - db
+      - amqp
+
+networks:
+  db:
+    driver: bridge
+  amqp:
+    driver: bridge
+  http:
+    driver: bridge

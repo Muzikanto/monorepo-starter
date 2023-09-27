@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  migration:
+    image: registry.gitlab.com/muzikanto/review-system/server:latest
+    container_name: migration
+    hostname: migration
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - postgres
+    command: [ 'node', './dist/apps/gateway/src/migration' ]
+    networks:
+      - db
+
+networks:
+  db:
+    driver: bridge
