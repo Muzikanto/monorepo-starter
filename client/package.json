@@ -1,0 +1,41 @@
+{
+  "name": "@review-system/client",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "husky": "^8.0.2",
+    "prettier": "^2.8.1",
+    "pretty-quick": "^3.1.3",
+    "turbo": "^1.10.12"
+  },
+  "scripts": {
+    "dev:admin": "turbo dev --filter=@review-system/admin",
+    "dev:ui-kit": "turbo dev --filter=@review-system/ui-kit",
+    "build:ui-kit": "turbo build --filter=@review-system/ui-kit",
+    "build:ui-utils": "turbo build --filter=@review-system/ui-utils",
+    "build:admin": "turbo build --filter=@review-system/admin",
+    "start": "npx turbo run start",
+    "lint": "npx turbo run lint",
+    "pretty": "npx turbo run pretty",
+    "dev:check": "npx turbo run dev:check",
+    "lint:fix": "npx turbo run lint:fix",
+    "clean": "npx turbo run clean"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@8.15.0",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

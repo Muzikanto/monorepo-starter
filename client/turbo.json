@@ -1,0 +1,42 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "start": {
+      "dependsOn": ["^start"]
+    },
+    "dev": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "storybook-static/**"
+      ]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "pretty": {},
+    "deploy": {
+      "dependsOn": ["build", "test", "lint"],
+      "outputs": []
+    },
+    "clean": {},
+    "dev:check": {},
+    "lint:fix": {}
+  },
+  "globalDependencies": [
+    ".npmrc",
+    ".prettierrc.json"
+  ],
+  "globalEnv": []
+}

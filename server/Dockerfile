@@ -4,7 +4,7 @@ RUN apk update
 WORKDIR /app
 
 COPY . .
-RUN npm install -S
+RUN yarn install
 RUN npm run build
 
 FROM node:alpine AS runner

@@ -50,3 +50,9 @@ coverage-e2e
 .env.development.local
 .env.test.local
 .env.production.local
+
+.vercel
+.next
+out
+storybook-static
+lib

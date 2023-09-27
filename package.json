@@ -10,5 +10,10 @@
   "dependencies": {
   },
   "devDependencies": {
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo \"no action\""
+    }
   }
 }
