@@ -1,8 +1,7 @@
 import { FastifyRequest } from 'fastify';
-import { UserAuth } from '@lib/core/identity/identity-auth/domain';
 
 export interface IRequest extends FastifyRequest {
-  user: UserAuth;
+  user: any;
   token?: string;
   userInfo?: { tutorialStage?: string };
 }

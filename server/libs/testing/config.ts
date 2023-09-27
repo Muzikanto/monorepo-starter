@@ -2,7 +2,6 @@ import { AppConfig, ConfigService, TelegramChatConfig } from '@lib/config';
 import { Global, Module } from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import { WorkerClientRmqConfig } from '@lib/config/worker-client.rmq.config';
-import { AuthConfig } from '@lib/core/identity/auth.config';
 import { LoggerConfig } from '@lib/config/logger.config';
 import { ServiceTcpConfigProvider } from '@lib/config/service-client.tcp.config';
 
@@ -13,8 +12,6 @@ process.env.RABBITMQ_PASSWORD = 'test';
 process.env.RABBITMQ_WORKER_QUEUE = 'test';
 process.env.RABBITMQ_GAME_SERVER_QUEUE = 'test';
 process.env.RABBITMQ_GATEWAY_QUEUE = 'test';
-
-process.env.AUTH_SECRET = 'test';
 
 process.env.LOGGER_LEVEL = 'error';
 
@@ -40,7 +37,6 @@ const configProviders = [
   ConfigService,
   NestConfigService,
   WorkerClientRmqConfig,
-  AuthConfig,
   AppConfig,
   LoggerConfig,
   TelegramChatConfig,

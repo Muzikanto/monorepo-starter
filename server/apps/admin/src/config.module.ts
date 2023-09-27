@@ -5,7 +5,6 @@ import { ConfigService } from '@lib/config/config.service';
 import { LoggerConfig } from '@lib/config/logger.config';
 import { AppConfig } from '@lib/config/app.config';
 import { HealthConfig } from '@lib/config/health.config';
-import { AuthConfig } from '@lib/core/identity/auth.config';
 import { TypeormConfig } from '@lib/config/typeorm.config';
 
 const providers = [
@@ -14,8 +13,6 @@ const providers = [
   LoggerConfig,
   TypeormConfig,
   HealthConfig,
-  // app
-  AuthConfig,
 ];
 
 @Global()

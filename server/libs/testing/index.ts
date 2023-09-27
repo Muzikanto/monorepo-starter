@@ -11,10 +11,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerModule, TELEGRAM_CLIENT_KEY, TelegramModule } from '@lib/modules';
 import { getTestingDataSource } from '@lib/testing/db/init-db';
 import { MockConfigModule } from '@lib/testing/config';
-import { IdentityModule } from '@lib/core/identity/identity.module';
-import { UserCoreApplicationModule } from '@lib/core/user/user-core/application-module';
-import { AuthTokenModule } from '@lib/core/identity/core/auth-token';
-import { AuthConfig } from '@lib/core/identity/auth.config';
 import { LoggerConfig } from '@lib/config/logger.config';
 import { WorkerClientRmqProvider } from '@lib/config/worker-client.rmq.inject';
 import { noop } from '@lib/utils/common/other/time';
@@ -34,15 +30,8 @@ export const getTestingApplication = async (metadata: ModuleMetadata): Promise<I
     ...metadata,
     imports: [
       MockConfigModule,
-      //
-      IdentityModule,
-      UserCoreApplicationModule.forRoot(),
-      //
       CqrsModule,
       ThrottlerModule.forRoot(),
-      AuthTokenModule.forRootAsync({
-        useClass: AuthConfig,
-      }),
       LoggerModule.forRootAsync({
         useExisting: LoggerConfig,
       }),

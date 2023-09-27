@@ -1,9 +1,6 @@
 import { DataType, newDb } from 'pg-mem';
 import { DataSource } from 'typeorm';
 import { v4 } from 'uuid';
-import { UserAuthEntity } from '@lib/core/identity/identity-auth/db-adapter';
-import { UserEntity } from '@lib/core/user/user-core/db-adapter';
-import { UserInfoEntity } from '@lib/core/user/user-info/db-adapter';
 
 export const getTestingDataSource = async () => {
   const db = newDb({
@@ -54,7 +51,7 @@ export const getTestingDataSource = async () => {
 
   const ds: DataSource = await db.adapters.createTypeormDataSource({
     type: 'postgres',
-    entities: [UserAuthEntity, UserEntity, UserInfoEntity],
+    entities: [],
     // autoLoadEntities: true,
   });
   await ds.initialize();

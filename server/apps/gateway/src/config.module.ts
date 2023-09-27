@@ -7,7 +7,6 @@ import { GatewayClientRmqConfig } from '@lib/config/gateway-client.rmq.config';
 import { GatewayClientTcpConfig } from '@lib/config/gateway-client.tcp.config';
 import { AppConfig } from '@lib/config/app.config';
 import { HealthConfig } from '@lib/config/health.config';
-import { AuthConfig } from '@lib/core/identity/auth.config';
 import { TypeormConfig } from '@lib/config/typeorm.config';
 import { TelegramChatConfig, TelegramConfig } from '@lib/config';
 
@@ -21,10 +20,6 @@ const providers = [
   TypeormConfig,
   // metrics
   HealthConfig,
-  // app
-  AuthConfig,
-  TelegramConfig,
-  TelegramChatConfig,
 ];
 
 @Global()
