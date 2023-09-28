@@ -1,7 +1,7 @@
 import { CanActivate, Injectable } from '@nestjs/common';
-import { UserAuthRepository } from '@lib/core/identity/identity-auth/infrastructure-module';
+import { UserAuthRepository } from '@lib/core/identity/infrastructure-module';
 import { Socket } from 'socket.io';
-import { UserAuth } from '@lib/core/identity/identity-auth/domain';
+import { UserAuth } from '@lib/core/identity/domain';
 import { extractWsAuthToken } from '@lib/core/identity/core/utils/extract-ws-auth-token';
 
 export type IWsData<Authorized extends boolean = false> = {
@@ -22,7 +22,7 @@ export class WsAuthGuard implements CanActivate {
     }
 
     try {
-      const user = await this.userAuthRepo.getByAuthKey(token);
+      const user = {} as any; // await this.userAuthRepo.getByAuthKey(token);
 
       socket.data = { user };
 

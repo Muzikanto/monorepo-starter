@@ -9,6 +9,7 @@ import { ResponseInterceptor } from '@lib/utils/nest/interceptors/response.inter
 import { GatewayClientRmqConfig } from '@lib/config/gateway-client.rmq.config';
 import { GatewayClientTcpConfig } from '@lib/config/gateway-client.tcp.config';
 import { AppConfig } from '@lib/config/app.config';
+import { fastifyExtend } from '@lib/utils/nest/fastify-extend';
 
 const logger = new Logger('Bootstrap');
 
@@ -16,6 +17,8 @@ async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter();
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
+  fastifyExtend(app);
+
   app.useLogger(await app.resolve(LoggerService));
   app.useGlobalInterceptors(new ResponseInterceptor());
 

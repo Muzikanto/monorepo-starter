@@ -10,6 +10,7 @@ import { HealthModule, PrometheusModule } from '@lib/modules';
 import { HealthConfig } from '@lib/config/health.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormConfig } from '@lib/config/typeorm.config';
+import { IdentityModule } from '@lib/core/identity/application-module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TypeormConfig } from '@lib/config/typeorm.config';
       imports: [ConfigModule],
     }),
     // ===== APP =====
+    IdentityModule,
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: ExceptionInterceptor }],
 })

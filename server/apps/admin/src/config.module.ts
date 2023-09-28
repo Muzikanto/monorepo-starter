@@ -7,13 +7,7 @@ import { AppConfig } from '@lib/config/app.config';
 import { HealthConfig } from '@lib/config/health.config';
 import { TypeormConfig } from '@lib/config/typeorm.config';
 
-const providers = [
-  ConfigService,
-  AppConfig,
-  LoggerConfig,
-  TypeormConfig,
-  HealthConfig,
-];
+const providers = [ConfigService, AppConfig, LoggerConfig, TypeormConfig, HealthConfig];
 
 @Global()
 @Module({
