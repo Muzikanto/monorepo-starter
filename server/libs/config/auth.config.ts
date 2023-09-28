@@ -8,12 +8,10 @@ import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt/dist/interfaces
 
 @Injectable()
 export class AuthConfig implements JwtOptionsFactory {
-  public readonly secret: string;
   public readonly redirectUri: string;
   public readonly jwtSecretKey: string;
 
   constructor(protected readonly configService: ConfigService, protected readonly appConfig: AppConfig) {
-    this.secret = configService.getString('AUTH_SECRET');
     this.redirectUri = configService.getString('AUTH_REDIRECT_URI');
     this.jwtSecretKey = configService.getString('AUTH_JWT_SECRET_KEY');
   }
