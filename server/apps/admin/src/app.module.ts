@@ -1,15 +1,18 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionInterceptor } from '@lib/utils/nest/interceptors';
-import { LoggerModule } from '@lib/modules/logger';
 import { ConfigModule } from './config.module';
-import { LoggerConfig } from '@lib/config/logger.config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule, PrometheusModule } from '@lib/modules';
 import { HealthConfig } from '@lib/config/health.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormConfig } from '@lib/config/typeorm.config';
+import LoggerModule from '@lib/modules/logger/logger.module';
+import { WinstonModule } from 'nest-winston';
+import WinstonConfig from '@lib/config/winston.config';
+import { SentryModule } from '@ntegral/nestjs-sentry';
+import { SentryConfig } from '@lib/config';
 
 @Module({
   imports: [
@@ -22,9 +25,14 @@ import { TypeormConfig } from '@lib/config/typeorm.config';
       useExisting: TypeormConfig,
     }),
     // utils
-    LoggerModule.forRootAsync({
+    LoggerModule,
+    WinstonModule.forRootAsync({
       imports: [ConfigModule],
-      useExisting: LoggerConfig,
+      useClass: WinstonConfig,
+    }),
+    SentryModule.forRootAsync({
+      imports: [ConfigModule],
+      useExisting: SentryConfig,
     }),
     // metrics
     PrometheusModule,

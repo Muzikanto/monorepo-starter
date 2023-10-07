@@ -1,10 +1,18 @@
-import { CallHandler, ExecutionContext, HttpException, Inject, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  HttpException,
+  Inject,
+  Injectable,
+  LoggerService,
+  NestInterceptor,
+} from '@nestjs/common';
 import { catchError, Observable, throwError } from 'rxjs';
-import { LoggerService } from '@lib/modules';
+import { Logger } from '@lib/modules';
 
 @Injectable()
 export class ExceptionInterceptor implements NestInterceptor {
-  @Inject(LoggerService) protected readonly logger!: LoggerService;
+  constructor(@Logger() protected readonly logger: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<object> {
     return next.handle().pipe(
@@ -20,7 +28,7 @@ export class ExceptionInterceptor implements NestInterceptor {
           err.extra.user = user.entity.id;
         }
 
-        this.logger.captureException(err, { sentry: err.status >= 500 });
+        // this.logger.captureException(err, { sentry: err.status >= 500 });
 
         return throwError(() => {
           return new HttpException(

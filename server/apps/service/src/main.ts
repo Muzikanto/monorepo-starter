@@ -4,12 +4,10 @@ import { Logger, VersioningType } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { RmqOptions, TcpOptions } from '@nestjs/microservices';
-import { LoggerService } from '@lib/modules/logger';
 import { ResponseInterceptor } from '@lib/utils/nest/interceptors/response.interceptor';
-import { GatewayClientRmqConfig } from '@lib/config/gateway-client.rmq.config';
-import { GatewayClientTcpConfig } from '@lib/config/gateway-client.tcp.config';
 import { AppConfig } from '@lib/config/app.config';
 import { SERVICE_TCP_CONFIG_KEY, ServiceClientRmqConfig } from '@lib/config';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 const logger = new Logger('Bootstrap');
 
@@ -17,7 +15,7 @@ async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter();
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
-  app.useLogger(await app.resolve(LoggerService));
+  app.useLogger(await app.resolve(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const config = app.get(AppConfig);

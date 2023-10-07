@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
 import clsx from 'clsx';
+import { TextField } from '@mui/material';
 
 export type ExampleProps = React.HtmlHTMLAttributes<HTMLParagraphElement>;
 
@@ -20,6 +21,7 @@ const Example: React.FC = (props: ExampleProps) => {
 
   return (
     <Root {...other} className={rootCN}>
+      <TextField/>
       example component
     </Root>
   );

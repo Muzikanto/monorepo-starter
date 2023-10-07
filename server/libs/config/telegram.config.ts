@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from './config.service';
-import { ITelegramFactory, ITelegramOptions } from '../modules/telegram';
+import { TelegrafModuleOptions, TelegrafOptionsFactory } from 'nestjs-telegraf';
 
 @Injectable()
-export class TelegramConfig implements ITelegramFactory {
+export class TelegramConfig implements TelegrafOptionsFactory {
   constructor(protected readonly configService: ConfigService) {
     //
   }
 
-  public createTelegramOptions(): ITelegramOptions {
+  createTelegrafOptions(): TelegrafModuleOptions {
     return {
       token: this.configService.getString('TELEGRAM_TOKEN'),
     };

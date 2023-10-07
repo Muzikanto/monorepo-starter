@@ -8,12 +8,16 @@ import { ClientsModule } from '@nestjs/microservices';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ScheduleModule } from '@nestjs/schedule';
-import { LoggerModule, TELEGRAM_CLIENT_KEY, TelegramModule } from '@lib/modules';
 import { getTestingDataSource } from '@lib/testing/db/init-db';
 import { MockConfigModule } from '@lib/testing/config';
-import { LoggerConfig } from '@lib/config/logger.config';
 import { WorkerClientRmqProvider } from '@lib/config/worker-client.rmq.inject';
-import { noop } from '@lib/utils/common/other/time';
+import { getBotToken, TelegrafModule } from 'nestjs-telegraf';
+import { SENTRY_TOKEN, SentryModule } from '@ntegral/nestjs-sentry';
+import { WinstonModule } from 'nest-winston';
+import WinstonConfig from '@lib/config/winston.config';
+import { SentryConfig } from '@lib/config';
+import { getMockSentry } from '@lib/testing/mock/getMockSentry';
+import { getMockTelegrafBot } from '@lib/testing/mock/getMockTelegrafBot';
 
 export const getTestingApplication = async (metadata: ModuleMetadata): Promise<ITestingApplication> => {
   const fastifyAdapter = new FastifyAdapter();
@@ -32,8 +36,16 @@ export const getTestingApplication = async (metadata: ModuleMetadata): Promise<I
       MockConfigModule,
       CqrsModule,
       ThrottlerModule.forRoot(),
-      LoggerModule.forRootAsync({
-        useExisting: LoggerConfig,
+      WinstonModule.forRootAsync({
+        useClass: WinstonConfig,
+      }),
+      SentryModule.forRootAsync({
+        useExisting: SentryConfig,
+      }),
+      TelegrafModule.forRootAsync({
+        useFactory: () => ({
+          token: 'test',
+        }),
       }),
       TypeOrmModule.forRoot({
         name: 'default',
@@ -42,7 +54,6 @@ export const getTestingApplication = async (metadata: ModuleMetadata): Promise<I
       }),
       ScheduleModule.forRoot(),
       ClientsModule.registerAsync([WorkerClientRmqProvider]),
-      TelegramModule.forRoot({ token: '' }),
       //
       ...(metadata.imports || []),
     ],
@@ -52,14 +63,12 @@ export const getTestingApplication = async (metadata: ModuleMetadata): Promise<I
     // override datasource
     .overrideProvider(getDataSourceToken('default'))
     .useValue(dataSource)
-    // override telegram
-    .overrideProvider(TELEGRAM_CLIENT_KEY())
-    .useValue({
-      sendMessage: noop,
-    })
-    // override client
-    // .overrideProvider(ExampleClient)
-    // .useClass(ExampleClientMock)
+    // telegram
+    .overrideProvider(getBotToken())
+    .useValue(getMockTelegrafBot())
+    // logger
+    .overrideProvider(SENTRY_TOKEN)
+    .useValue(getMockSentry())
     .compile();
 
   const app = moduleFixture.createNestApplication<NestFastifyApplication>(fastifyAdapter);

@@ -1,19 +1,21 @@
 import { Global, Module } from '@nestjs/common';
 import * as NestConfig from '@nestjs/config';
 import { ConfigService } from '@lib/config/config.service';
-import { LoggerConfig } from '@lib/config/logger.config';
 import { WorkerClientRmqConfig } from '@lib/config/worker-client.rmq.config';
 import { AppConfig } from '@lib/config/app.config';
 import path from 'path';
 import { HealthConfig } from '@lib/config/health.config';
 import { TypeormConfig } from '@lib/config/typeorm.config';
+import WinstonConfig from '@lib/config/winston.config';
+import { SentryConfig } from '@lib/config';
 
 const providers = [
   // basic
   ConfigService,
   AppConfig,
   WorkerClientRmqConfig,
-  LoggerConfig,
+  WinstonConfig,
+  SentryConfig,
   TypeormConfig,
   HealthConfig,
 ];

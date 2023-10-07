@@ -2,16 +2,17 @@ import { Global, Module } from '@nestjs/common';
 import * as NestConfig from '@nestjs/config';
 import * as path from 'path';
 import { ConfigService } from '@lib/config/config.service';
-import { LoggerConfig } from '@lib/config/logger.config';
 import { AppConfig } from '@lib/config/app.config';
 import { HealthConfig } from '@lib/config/health.config';
 import { TypeormConfig } from '@lib/config/typeorm.config';
-import { ServiceClientRmqConfig, ServiceTcpConfigProvider } from '@lib/config';
+import { SentryConfig, ServiceClientRmqConfig, ServiceTcpConfigProvider } from '@lib/config';
+import WinstonConfig from '@lib/config/winston.config';
 
 const providers = [
   ConfigService,
   AppConfig,
-  LoggerConfig,
+  WinstonConfig,
+  SentryConfig,
   TypeormConfig,
   HealthConfig,
   ServiceClientRmqConfig,

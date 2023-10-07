@@ -1,6 +1,6 @@
-import { LoggerService } from '../logger.service';
 import { getParsedResult } from '../utils/logger.helpers';
 import { Logger } from './logger.decorator';
+import { LoggerService } from '@nestjs/common';
 
 export const SERVICE_LOGGER_KEY = 'logger';
 
@@ -20,7 +20,7 @@ export function MethodLogger(
     }
 
     descriptor.value = async function (this: any, ...args: any[]) {
-      logger = this[SERVICE_LOGGER_KEY];
+      logger = this[SERVICE_LOGGER_KEY] as LoggerService;
 
       const start = new Date().getTime();
 
@@ -44,7 +44,7 @@ export function MethodLogger(
             getParsedResult(ctx.res) || 'void'
           }`;
 
-          logger.debug(message, ctx.target);
+          logger.debug!(message, ctx.target);
         }
 
         return result;

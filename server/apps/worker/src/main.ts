@@ -3,9 +3,9 @@ import { AppModule } from './app.module';
 import { Logger, VersioningType } from '@nestjs/common';
 import { RmqOptions } from '@nestjs/microservices';
 import { ResponseInterceptor } from '@lib/utils/nest/interceptors/response.interceptor';
-import { LoggerService } from '@lib/modules/logger';
 import { AppConfig } from '@lib/config/app.config';
 import { WorkerClientRmqConfig } from '@lib/config/worker-client.rmq.config';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 const host = '0.0.0.0';
 
@@ -13,7 +13,7 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
   const app = await NestFactory.create(AppModule);
-  app.useLogger(await app.resolve(LoggerService));
+  app.useLogger(await app.resolve(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const config = app.get(AppConfig);

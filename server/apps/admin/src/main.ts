@@ -3,9 +3,9 @@ import { AppModule } from './app.module';
 import { Logger, VersioningType } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { LoggerService } from '@lib/modules/logger';
 import { ResponseInterceptor } from '@lib/utils/nest/interceptors/response.interceptor';
 import { AppConfig } from '@lib/config/app.config';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 const logger = new Logger('Bootstrap');
 
@@ -13,7 +13,7 @@ async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter();
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter);
-  app.useLogger(await app.resolve(LoggerService));
+  app.useLogger(await app.resolve(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const config = app.get(AppConfig);
