@@ -1,8 +1,5 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
-import { PrometheusService } from '../prometheus/prometheus.service';
-import { MetricsService } from './metrics/metrics.service';
-import { MetricsController } from './metrics/metrics.controller';
 import { HealthController } from './health.controller';
 import { HEALTH_CONFIG_KEY } from './health.inject';
 import { IHealthAsyncOptions, IHealthConfigFactory } from './health.types';
@@ -22,8 +19,8 @@ export class HealthModule {
     return {
       module: HealthModule,
       imports: [TerminusModule],
-      providers: [HealthService, configProvider, PrometheusService, MetricsService],
-      controllers: [HealthController, MetricsController],
+      providers: [HealthService, configProvider],
+      controllers: [HealthController],
     };
   }
 }

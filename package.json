@@ -5,12 +5,11 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
+    "prettier": "^3.0.3"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "echo \"no action\""

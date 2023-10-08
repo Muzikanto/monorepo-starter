@@ -4,10 +4,11 @@ import { ConfigService } from '@lib/config/config.service';
 import { WorkerClientRmqConfig } from '@lib/config/worker-client.rmq.config';
 import { AppConfig } from '@lib/config/app.config';
 import path from 'path';
-import { HealthConfig } from '@lib/config/health.config';
 import { TypeormConfig } from '@lib/config/typeorm.config';
 import WinstonConfig from '@lib/config/winston.config';
-import { SentryConfig } from '@lib/config';
+import { PrometheusConfig, SentryConfig } from '@lib/config';
+import { HealthConfig } from '@app/worker/src/health.config';
+import { makeGaugeProvider } from '@willsoto/nestjs-prometheus';
 
 const providers = [
   // basic
@@ -18,6 +19,8 @@ const providers = [
   SentryConfig,
   TypeormConfig,
   HealthConfig,
+  PrometheusConfig,
+  makeGaugeProvider({ name: 'test', help: 'Http' }),
 ];
 
 @Global()

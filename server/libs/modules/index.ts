@@ -3,5 +3,4 @@ export * from './health';
 export * from './key-value';
 export * from './logger';
 export * from './ping';
-export * from './prometheus';
 export * from './telegram';

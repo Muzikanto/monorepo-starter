@@ -4,8 +4,7 @@ import { ExceptionInterceptor } from '@lib/utils/nest/interceptors';
 import { ConfigModule } from './config.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
-import { HealthModule, PrometheusModule } from '@lib/modules';
-import { HealthConfig } from '@lib/config/health.config';
+import { HealthModule, PingModule } from '@lib/modules';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormConfig } from '@lib/config/typeorm.config';
 import { IdentityModule } from '@lib/core/identity/application-module';
@@ -13,7 +12,9 @@ import LoggerModule from '@lib/modules/logger/logger.module';
 import { WinstonModule } from 'nest-winston';
 import WinstonConfig from '@lib/config/winston.config';
 import { SentryModule } from '@ntegral/nestjs-sentry';
-import { SentryConfig } from '@lib/config';
+import { PrometheusConfig, SentryConfig } from '@lib/config';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { HealthConfig } from '@app/gateway/src/health.config';
 
 @Module({
   imports: [
@@ -36,11 +37,15 @@ import { SentryConfig } from '@lib/config';
       useExisting: SentryConfig,
     }),
     // metrics
-    PrometheusModule,
+    PrometheusModule.registerAsync({
+      imports: [ConfigModule],
+      useExisting: PrometheusConfig,
+    }),
     HealthModule.forRootAsync({
       useExisting: HealthConfig,
       imports: [ConfigModule],
     }),
+    PingModule,
     // ===== APP =====
     IdentityModule,
   ],

@@ -5,6 +5,6 @@ receivers:
   - name: 'telegram'
     telegram_configs:
       - api_url: https://api.telegram.org
-        bot_token: 6627460328:AAE3SA9vexCPQk5P7A0pzhhn77f-U_MKdTU
-        chat_id: 674525070
+        bot_token: test
+        chat_id: test
         parse_mode: ''
