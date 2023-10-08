@@ -1,0 +1,10 @@
+delete from main.game_user_bunker where "id" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.game_user_bunker_room where "bunkerId" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.game_user_bunker_room_place where "bunkerId" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.game_user_mission where "userId" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.game_mission_offer where "userId" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.user where "userId" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.user_balance where "id" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.user_auth where "id" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.user_description where "id" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
+delete from main.user_item where "userId" = 'xZuFnJxtPEnTkt7eNl0dgPtr';
