@@ -8,6 +8,7 @@ export class AppConfig {
   public readonly mode: string;
   public readonly host: string;
   public readonly url: string;
+  public readonly fnsToken: string;
 
   constructor(configService: ConfigService) {
     this.port = configService.getNumber('PORT');
@@ -15,5 +16,7 @@ export class AppConfig {
     this.isProduction = configService.getRaw('NODE_ENV') === 'production';
     this.mode = configService.getRaw('NODE_ENV') || 'development';
     this.url = `${this.host}:${this.port}`;
+
+    this.fnsToken = configService.getString('FNS_TOKEN');
   }
 }

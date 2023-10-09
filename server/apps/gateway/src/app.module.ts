@@ -15,6 +15,9 @@ import { SentryModule } from '@ntegral/nestjs-sentry';
 import { PrometheusConfig, SentryConfig } from '@lib/config';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { HealthConfig } from '@app/gateway/src/health.config';
+import { CheckApplicationModule } from '@lib/core/check/application-module';
+import { ProductApplicationModule } from '@lib/core/product/application-module';
+import { ShopApplicationModule } from '@lib/core/shop/application-module';
 
 @Module({
   imports: [
@@ -48,6 +51,9 @@ import { HealthConfig } from '@app/gateway/src/health.config';
     PingModule,
     // ===== APP =====
     IdentityModule,
+    CheckApplicationModule,
+    ProductApplicationModule,
+    ShopApplicationModule,
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: ExceptionInterceptor }],
 })

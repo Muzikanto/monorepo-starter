@@ -11,4 +11,4 @@ import { ExampleInfrastructureModule } from '@lib/core/example/infrastructure-mo
   controllers: [ExampleController],
   providers: [...QueryHandlers, ...CommandHandlers, ...EventHandlers],
 })
-export class BattleApplicationModule {}
+export class ExampleApplicationModule {}

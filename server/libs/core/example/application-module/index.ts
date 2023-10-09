@@ -1,1 +1,1 @@
-export * from './battle.module';
+export * from './example.module';
