@@ -9,10 +9,12 @@ export type IFnsCheck = {
     quantity: number;
     paymentType: number;
     productType: number;
-    productCodeNew: {
+    productCodeNew?: {
       [key: string]: { gtin: string; sernum: string; productIdType: number; rawProductCode: string };
     };
     itemsQuantityMeasure: number;
+    labelCodeProcesMode?: number; // 0
+    checkingProdInformationResult?: number; // 0
   }>;
   nds10: number;
   nds18: number;
@@ -47,4 +49,6 @@ export type IFnsCheck = {
   appliedTaxationType: number;
   fiscalDocumentNumber: number;
   fiscalDocumentFormatVer: number;
+  buyerPhoneOrAddress?: string;
+  checkingLabeledProdResult?: number; // 1
 };

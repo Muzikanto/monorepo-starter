@@ -69,6 +69,10 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
     }
 
     for (const checkItem of fnsCheck.items) {
+     if (!checkItem.productCodeNew) {
+        continue;
+     }
+
       const productCodeStandard = Object.keys(checkItem.productCodeNew)[0];
       const productId = checkItem.productCodeNew[productCodeStandard].rawProductCode;
       const shopProductId = md5(`${shopId}-${productId}`);
@@ -118,8 +122,12 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
   }
 
   protected async getCheckInfo(code: string): Promise<IFnsCheck> {
-    const res = await axios.post('https://proverkacheka.com/api/v1/check/get', `token=${this.appConfig.fnsToken}&${code}`);
+    const res = await axios.post('https://proverkacheka.com/api/v1/check/get', `${code}&token=${this.appConfig.fnsToken}`);
 
-    return res.data.data.json;
+    if (res.data.code !== 1) {
+        throw new BadRequestException(res.data.data);
+    }
+
+    return res.data.data.json || res.data.json;
   }
 }
