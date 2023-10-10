@@ -26,7 +26,7 @@ export class CheckProductEntity implements ICheckProduct {
   @Column({ type: 'varchar', length: 255 })
   checkId!: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'float' })
   amount!: number;
 
   @Column({ type: 'int' })

@@ -4,7 +4,7 @@ import { ProductRepository } from '@lib/core/product/infrastructure-module';
 import { ProductEntity } from '@lib/core/product/db-adapter';
 import { ShopProductRepository, ShopRepository } from '@lib/core/shop/infrastructure-module';
 import axios from 'axios';
-import { IFnsCheck } from '@lib/core/check/application-module/commands/types/check-fns.types';
+import {IFnsCheck, IFnsCheckItem} from '@lib/core/check/application-module/commands/types/check-fns.types';
 import { Product } from '@lib/core/product/domain';
 import { Shop, ShopProduct } from '@lib/core/shop/domain';
 import { ShopEntity, ShopProductEntity } from '@lib/core/shop/db-adapter';
@@ -14,6 +14,8 @@ import { CheckProductRepository, CheckRepository } from '@lib/core/check/infrast
 import { CheckEntity, CheckProductEntity } from '@lib/core/check/db-adapter';
 import { AppConfig } from '@lib/config';
 import md5 from 'md5';
+import fs from 'fs';
+import path from 'path';
 import { BadRequestException } from '@nestjs/common';
 import { CheckProduct } from '@lib/core/check/domain';
 
@@ -33,7 +35,7 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
   }
 
   async execute({ payload }: CreateCheckCommand): Promise<void> {
-    const fnsCheck = await this.getCheckInfo(payload.code);
+    const fnsCheck = await this.getCheckInfoFromFile(payload.code);
     const shopId = fnsCheck.metadata.id.toString();
     const checkId = md5(payload.code);
 
@@ -69,12 +71,7 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
     }
 
     for (const checkItem of fnsCheck.items) {
-     if (!checkItem.productCodeNew) {
-        continue;
-     }
-
-      const productCodeStandard = Object.keys(checkItem.productCodeNew)[0];
-      const productId = checkItem.productCodeNew[productCodeStandard].rawProductCode;
+      const productId = this.getCheckItemId(checkItem);
       const shopProductId = md5(`${shopId}-${productId}`);
 
       const checkProduct = this.checkProductRepository.toDomain(
@@ -128,6 +125,45 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
         throw new BadRequestException(res.data.data);
     }
 
-    return res.data.data.json || res.data.json;
+    return this.deduplicate(res.data.data.json || res.data.json);
+  }
+
+  protected async getCheckInfoFromFile(code: string): Promise<IFnsCheck> {
+      const raw = fs.readFileSync(path.resolve('..', 'test-data', code + '.json'), { encoding: 'utf-8' });
+
+      return this.deduplicate(JSON.parse(raw).data.json);
+  }
+
+  protected deduplicate(data: IFnsCheck): IFnsCheck {
+      const itemsMap = data.items.reduce((acc, el) => {
+          const productId = this.getCheckItemId(el);
+
+          let result: IFnsCheckItem | undefined = acc[productId];
+
+          if (!result) {
+              result = el;
+          } else {
+              result.sum += el.sum;
+              result.quantity += el.quantity;
+          }
+
+          return {
+              ...acc,
+              [productId]: result,
+          };
+      }, {});
+
+      return {...data, items: Object.values(itemsMap)};
+  }
+
+  protected getCheckItemId(item: IFnsCheckItem): string {
+      if (!item.productCodeNew) {
+          return item.name;
+      }
+
+      const productCodeStandard = Object.keys(item.productCodeNew)[0];
+      const productId = item.productCodeNew[productCodeStandard].gtin;
+
+      return productId;
   }
 }

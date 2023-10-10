@@ -1,4 +1,4 @@
-import { TransformID, TransformInt } from '@lib/utils';
+import {TransformFloat, TransformID, TransformInt} from '@lib/utils';
 import { ICheckProductDto } from '@lib/core/check/domain';
 
 export class CheckProductDto<TDate = number> implements ICheckProductDto<TDate> {
@@ -23,7 +23,7 @@ export class CheckProductDto<TDate = number> implements ICheckProductDto<TDate> 
   @TransformInt()
   price!: number;
 
-  @TransformInt()
+  @TransformFloat()
   amount!: number;
 
   @TransformInt()

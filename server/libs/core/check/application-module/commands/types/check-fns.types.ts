@@ -1,21 +1,22 @@
+export type IFnsCheckItem = {
+  nds: number;
+  sum: number;
+  name: string;
+  price: number;
+  quantity: number;
+  paymentType: number;
+  productType: number;
+  productCodeNew?: {
+    [key: string]: { gtin: string; sernum: string; productIdType: number; rawProductCode: string };
+  };
+  itemsQuantityMeasure: number;
+  labelCodeProcesMode?: number; // 0
+  checkingProdInformationResult?: number; // 0
+};
 export type IFnsCheck = {
   code: number;
   user: string;
-  items: Array<{
-    nds: number;
-    sum: number;
-    name: string;
-    price: number;
-    quantity: number;
-    paymentType: number;
-    productType: number;
-    productCodeNew?: {
-      [key: string]: { gtin: string; sernum: string; productIdType: number; rawProductCode: string };
-    };
-    itemsQuantityMeasure: number;
-    labelCodeProcesMode?: number; // 0
-    checkingProdInformationResult?: number; // 0
-  }>;
+  items: IFnsCheckItem[];
   nds10: number;
   nds18: number;
   region: string;
