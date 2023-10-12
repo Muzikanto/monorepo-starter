@@ -4,7 +4,7 @@ import { ProductRepository } from '@lib/core/product/infrastructure-module';
 import { ProductEntity } from '@lib/core/product/db-adapter';
 import { ShopProductRepository, ShopRepository } from '@lib/core/shop/infrastructure-module';
 import axios from 'axios';
-import {IFnsCheck, IFnsCheckItem} from '@lib/core/check/application-module/commands/types/check-fns.types';
+import { IFnsCheck, IFnsCheckItem } from '@lib/core/check/application-module/commands/types/check-fns.types';
 import { Product } from '@lib/core/product/domain';
 import { Shop, ShopProduct } from '@lib/core/shop/domain';
 import { ShopEntity, ShopProductEntity } from '@lib/core/shop/db-adapter';
@@ -35,8 +35,9 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
   }
 
   async execute({ payload }: CreateCheckCommand): Promise<void> {
+    // await this.dataSource.query(['check', 'check_product', 'product', 'shop', 'shop_product'].map(el => `truncate main.${el};`).join('\n'));
     const fnsCheck = await this.getCheckInfoFromFile(payload.code);
-    const shopId = fnsCheck.metadata.id.toString();
+    const shopId = md5(fnsCheck.user);
     const checkId = md5(payload.code);
 
     const checkExists = await this.checkRepository.get(checkId);
@@ -119,51 +120,54 @@ export class CreateCheckCommandHandler implements ICommandHandler<CreateCheckCom
   }
 
   protected async getCheckInfo(code: string): Promise<IFnsCheck> {
-    const res = await axios.post('https://proverkacheka.com/api/v1/check/get', `${code}&token=${this.appConfig.fnsToken}`);
+    const res = await axios.post(
+      'https://proverkacheka.com/api/v1/check/get',
+      `${code}&token=${this.appConfig.fnsToken}`
+    );
 
     if (res.data.code !== 1) {
-        throw new BadRequestException(res.data.data);
+      throw new BadRequestException(res.data.data);
     }
 
     return this.deduplicate(res.data.data.json || res.data.json);
   }
 
   protected async getCheckInfoFromFile(code: string): Promise<IFnsCheck> {
-      const raw = fs.readFileSync(path.resolve('..', 'test-data', code + '.json'), { encoding: 'utf-8' });
+    const raw = fs.readFileSync(path.resolve('..', 'test-data', code + '.json'), { encoding: 'utf-8' });
 
-      return this.deduplicate(JSON.parse(raw).data.json);
+    return this.deduplicate(JSON.parse(raw).data.json);
   }
 
   protected deduplicate(data: IFnsCheck): IFnsCheck {
-      const itemsMap = data.items.reduce((acc, el) => {
-          const productId = this.getCheckItemId(el);
+    const itemsMap = data.items.reduce((acc, el) => {
+      const productId = this.getCheckItemId(el);
 
-          let result: IFnsCheckItem | undefined = acc[productId];
+      let result: IFnsCheckItem | undefined = acc[productId];
 
-          if (!result) {
-              result = el;
-          } else {
-              result.sum += el.sum;
-              result.quantity += el.quantity;
-          }
+      if (!result) {
+        result = el;
+      } else {
+        result.sum += el.sum;
+        result.quantity += el.quantity;
+      }
 
-          return {
-              ...acc,
-              [productId]: result,
-          };
-      }, {});
+      return {
+        ...acc,
+        [productId]: result,
+      };
+    }, {});
 
-      return {...data, items: Object.values(itemsMap)};
+    return { ...data, items: Object.values(itemsMap) };
   }
 
   protected getCheckItemId(item: IFnsCheckItem): string {
-      if (!item.productCodeNew) {
-          return item.name;
-      }
+    if (!item.productCodeNew) {
+      return item.name;
+    }
 
-      const productCodeStandard = Object.keys(item.productCodeNew)[0];
-      const productId = item.productCodeNew[productCodeStandard].gtin;
+    const productCodeStandard = Object.keys(item.productCodeNew)[0];
+    const productId = item.productCodeNew[productCodeStandard].gtin;
 
-      return productId;
+    return productId;
   }
 }

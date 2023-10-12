@@ -1,3 +1,5 @@
+import { IProduct } from '@lib/core/product/domain';
+
 export type IShopProduct<TDate = Date> = {
   id: string;
   productId: string;
@@ -6,4 +8,6 @@ export type IShopProduct<TDate = Date> = {
 
   updatedAt: TDate;
   createdAt: TDate;
+
+  product?: IProduct;
 };

@@ -56,3 +56,5 @@ coverage-e2e
 out
 storybook-static
 lib
+
+test-data

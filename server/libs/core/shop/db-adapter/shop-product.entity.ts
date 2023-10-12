@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { randomId } from '@lib/utils';
 import { IShopProduct } from '../domain';
+import { ProductEntity } from '@lib/core/product/db-adapter';
 
 @Entity({ name: 'shop_product' })
 export class ShopProductEntity implements IShopProduct {
@@ -25,4 +26,8 @@ export class ShopProductEntity implements IShopProduct {
 
   @Column({ type: 'timestamp', default: 'now()' })
   createdAt: Date = new Date();
+
+  //
+  @ManyToOne(() => ProductEntity, (el) => el.shopProducts, { createForeignKeyConstraints: false })
+  product?: ProductEntity;
 }

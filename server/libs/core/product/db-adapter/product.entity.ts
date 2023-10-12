@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IProduct } from '../domain';
+import { ShopProductEntity } from '@lib/core/shop/db-adapter';
 
 @Entity({ name: 'product' })
 export class ProductEntity implements IProduct {
@@ -21,4 +22,7 @@ export class ProductEntity implements IProduct {
 
   @Column({ type: 'timestamp', default: 'now()' })
   createdAt: Date = new Date();
+
+  @OneToMany(() => ShopProductEntity, (el) => el.product, { createForeignKeyConstraints: false })
+  shopProducts?: ShopProductEntity[];
 }

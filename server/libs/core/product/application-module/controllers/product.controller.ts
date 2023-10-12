@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserAuth } from '@lib/core/identity/domain';
 import { ProductDto } from '../../domain/dto/product.dto';
 import { ValidationPipe } from '@lib/utils';
-import { Product, ProductMapper, IProductDto } from '@lib/core/product/domain';
+import { Product, ProductMapper, IProductDto, IProductsDto } from '@lib/core/product/domain';
 import { AuthGuard, AuthUser } from '@lib/core/identity/core';
 import { FindProductDto } from '@lib/core/product/application-module/queries/dto/find-product.dto';
 
@@ -27,12 +27,12 @@ export class ProductController {
     summary: 'Find products',
     tags: [tag],
   })
-  @ApiResponse({ type: ProductDto })
-  async get(@Query() query: FindProductDto): Promise<IProductDto> {
-    const product = await this.queryBus.execute<FindProductQuery, Product>(
-      new FindProductQuery({ limit: query.limit, offset: query.offset || 0 })
+  @ApiResponse({ type: ProductDto, isArray: true })
+  async find(@Query() query: FindProductDto): Promise<IProductsDto> {
+    const products = await this.queryBus.execute<FindProductQuery, Product[]>(
+      new FindProductQuery({ limit: query.limit, offset: query.offset || 0, search: query.search })
     );
 
-    return ProductMapper.toResponse(product);
+    return products.map((el) => ProductMapper.toResponse(el));
   }
 }

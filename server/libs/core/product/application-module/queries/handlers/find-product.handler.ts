@@ -8,6 +8,6 @@ export class FindProductHandler implements IQueryHandler<FindProductQuery> {
   constructor(protected readonly productRepository: ProductRepository) {}
 
   async execute({ payload }: FindProductQuery): Promise<Product[]> {
-    return this.productRepository.find({ limit: 100, offset: 0 });
+    return this.productRepository.find({ limit: 100, offset: 0, search: payload.search });
   }
 }
