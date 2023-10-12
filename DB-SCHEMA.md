@@ -1,0 +1,8 @@
+- user (id, inn, updatedAt, createdAt)
+- product (id, name, image?, updatedAt, createdAt)
+- check (id, userId, code, createdAt)
+- check_product (id, userId, shopProductId, productId, shopId, amount, price, minPrice)
+- shop (id, title, address, image?, updatedAt, createdAt)
+- shop_product (id, productId, price, updatedAt, createdAt)
+- checklist (id, userId, shopId?, closedAt?, price?, minPrice?, updatedAt, createdAt)
+- checklist_product (id, userId, checklistId, productId?, amount, isChecked)
